@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书文字卡片生成器</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧模板选择栏 -->
+        <div class="sidebar left-sidebar">
+            <h3>模板选择</h3>
+            <div class="template-list">
+                <div class="template-item active" data-template="gradient">
+                    <div class="template-preview gradient-template"></div>
+                    <span>渐变模板</span>
+                </div>
+                <div class="template-item" data-template="solid">
+                    <div class="template-preview solid-template"></div>
+                    <span>纯色模板</span>
+                </div>
+                <div class="template-item" data-template="pattern">
+                    <div class="template-preview pattern-template"></div>
+                    <span>图案模板</span>
+                </div>
+                <div class="template-item" data-template="neon">
+                    <div class="template-preview neon-template"></div>
+                    <span>霓虹模板</span>
+                </div>
+                <div class="template-item" data-template="vintage">
+                    <div class="template-preview vintage-template"></div>
+                    <span>复古模板</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间预览区域 -->
+        <div class="main-content">
+            <div class="preview-header">
+                <h2>卡片预览</h2>
+                <div class="action-buttons">
+                    <button id="crop-btn" class="action-btn">裁剪</button>
+                    <button id="add-card-btn" class="action-btn">添加卡片</button>
+                    <button id="download-btn" class="action-btn">下载</button>
+                </div>
+            </div>
+            <div class="preview-container">
+                <div class="card-preview" id="cardPreview">
+                    <div class="card-inner" id="cardInner">
+                        <div class="card-content" id="cardContent">
+                            <h1 id="cardTitle">你的标题</h1>
+                            <div id="cardText" class="markdown-content">在这里输入你的文字内容，可以是心情、感悟或者任何想要分享的内容。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="crop-controls" id="cropControls" style="display: none;">
+                <label>宽度: <input type="range" id="widthSlider" min="200" max="600" value="400"></label>
+                <label>高度: <input type="range" id="heightSlider" min="200" max="800" value="500"></label>
+                <button id="apply-crop">应用裁剪</button>
+                <button id="cancel-crop">取消</button>
+            </div>
+        </div>
+
+        <!-- 右侧内容调整栏 -->
+        <div class="sidebar right-sidebar">
+            <h3>内容调整</h3>
+            
+            <!-- 文本内容 -->
+            <div class="control-group">
+                <label>标题</label>
+                <input type="text" id="titleInput" value="你的标题" placeholder="输入标题">
+            </div>
+            
+            <div class="control-group">
+                <label>正文 <span class="markdown-hint">(支持Markdown语法)</span></label>
+                <textarea id="textInput" placeholder="支持Markdown语法：**粗体** *斜体* `代码` > 引用">在这里输入你的文字内容，可以是心情、感悟或者任何想要分享的内容。</textarea>
+                <div class="markdown-examples">
+                    <small>示例：**粗体** *斜体* `代码` > 引用 [链接](url)</small>
+                </div>
+            </div>
+
+            <!-- 字体设置 -->
+            <div class="control-group">
+                <label>字体</label>
+                <select id="fontFamily">
+                    <option value="'PingFang SC', 'Microsoft YaHei', sans-serif">苹方/微软雅黑</option>
+                    <option value="'Noto Sans SC', sans-serif">思源黑体</option>
+                    <option value="'Source Han Serif SC', serif">思源宋体</option>
+                    <option value="cursive">手写体</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>标题大小: <span id="titleSizeValue">32px</span></label>
+                <input type="range" id="titleSize" min="16" max="48" value="32">
+            </div>
+
+            <div class="control-group">
+                <label>正文大小: <span id="textSizeValue">16px</span></label>
+                <input type="range" id="textSize" min="12" max="24" value="16">
+            </div>
+
+            <!-- 样式设置 -->
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="roundedCorners" checked>
+                    圆角处理
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>内边距: <span id="paddingValue">40px</span></label>
+                <input type="range" id="paddingSize" min="10" max="80" value="40">
+            </div>
+
+            <div class="control-group">
+                <label>内容背景透明度: <span id="innerOpacityValue">0%</span></label>
+                <input type="range" id="innerOpacity" min="0" max="100" value="0">
+            </div>
+
+            <!-- 背景颜色 -->
+            <div class="control-group">
+                <label>背景颜色</label>
+                <div class="color-options">
+                    <input type="color" id="bgColor1" value="#ff6b6b">
+                    <input type="color" id="bgColor2" value="#4ecdc4">
+                    <label>
+                        <input type="checkbox" id="useGradient" checked>
+                        渐变背景
+                    </label>
+                </div>
+            </div>
+
+            <!-- 文字颜色 -->
+            <div class="control-group">
+                <label>文字颜色</label>
+                <input type="color" id="textColor" value="#ffffff">
+            </div>
+
+            <!-- 文字阴影 -->
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="textShadow">
+                    文字阴影
+                </label>
+            </div>
+
+            <!-- 标题对齐 -->
+            <div class="control-group">
+                <label>标题对齐</label>
+                <div class="align-options">
+                    <button class="align-btn active" data-align="center" data-target="title">居中</button>
+                    <button class="align-btn" data-align="left" data-target="title">左对齐</button>
+                    <button class="align-btn" data-align="right" data-target="title">右对齐</button>
+                </div>
+            </div>
+
+            <!-- 正文对齐 -->
+            <div class="control-group">
+                <label>正文对齐</label>
+                <div class="align-options">
+                    <button class="align-btn active" data-align="center" data-target="text">居中</button>
+                    <button class="align-btn" data-align="left" data-target="text">左对齐</button>
+                    <button class="align-btn" data-align="right" data-target="text">右对齐</button>
+                </div>
+            </div>
+
+            <!-- 预设样式 -->
+            <div class="control-group">
+                <label>预设样式</label>
+                <div class="preset-styles">
+                    <button class="preset-btn" data-preset="sunset">日落</button>
+                    <button class="preset-btn" data-preset="ocean">海洋</button>
+                    <button class="preset-btn" data-preset="forest">森林</button>
+                    <button class="preset-btn" data-preset="purple">紫色</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
