@@ -1,0 +1,40 @@
+{
+  "name": "xiaohongshu-card-generator",
+  "version": "1.0.0",
+  "description": "一个功能丰富的小红书文字卡片生成器，支持Markdown语法、多种模板和自定义样式",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "vercel --prod",
+    "deploy:vercel": "vercel --prod",
+    "serve": "npx serve ."
+  },
+  "keywords": [
+    "xiaohongshu",
+    "card-generator",
+    "text-card",
+    "markdown",
+    "design-tool",
+    "web-app"
+  ],
+  "author": "Trae AI",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/xiaohongshu-card-generator.git"
+  },
+  "homepage": "https://your-deployment-url.vercel.app",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
